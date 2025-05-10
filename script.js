@@ -1,3 +1,28 @@
+window.addEventListener('error', function(event) {
+    logErrorToVercel('Runtime Error', event.message, event.filename, event.lineno, event.colno, event.error);
+});
+
+window.addEventListener('unhandledrejection', function(event) {
+    logErrorToVercel('Unhandled Promise Rejection', event.reason);
+});
+
+function logErrorToVercel(type, message, source, lineno, colno, errorObj) {
+    fetch('/api/log-error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type,
+            message,
+            source,
+            lineno,
+            colno,
+            stack: errorObj?.stack || null,
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+        })
+    });
+}
+
 const config = {
     priceMovementMin: 8.0,
     priceMovementMax: 13.0,
@@ -1591,7 +1616,6 @@ function seededRandom(seed) {
     return x - Math.floor(x);
 }
 
-// Format number with commas
 function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
