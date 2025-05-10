@@ -1,0 +1,4100 @@
+<!DOCTYPE html>
+<!-- PHANTOM_EDGE.html - Quantum Breakout Detection System v3.7.9 -->
+<!-- Advanced Real-Time Market Analysis Framework -->
+<!-- Focused on 8-13% Critical Breakout Detection Window -->
+<!-- Core Detection Algorithm: pE-QuantumEdge™ -->
+<!-- Designed by HyperThought Industries -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHANTOM_EDGE // Quantum Breakout Detection System v3.7.9</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --neon-quantum: #00F3FF;
+            --neon-flux: #FF00F5;
+            --neon-signal: #9D00FF;
+            --neon-alert: #FF3366;
+            --neon-confirm: #00FF9D;
+            --bg-primary: #050518;
+            --bg-secondary: #07071e;
+            --bg-tertiary: rgba(7, 7, 30, 0.92);
+            --bg-quaternary: rgba(5, 5, 24, 0.85);
+            --text-primary: #E0E0FF;
+            --text-secondary: rgba(224, 224, 255, 0.7);
+            --breakout-zone: linear-gradient(to right, #00FF9D25, #FF336625);
+            --glow-intensity: 0.8;
+            --font-cyber: 'BlenderPro', 'Rajdhani', 'Play', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Play:wght@400;700&family=Space+Mono:wght@400;700&display=swap');
+
+        @font-face {
+            font-family: 'BlenderPro';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/BlurBold/4.0.0/blur-bold-webfont.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-cyber);
+            color: var(--text-primary);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(157, 0, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 243, 255, 0.08) 0%, transparent 40%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Hexagonal grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='%2300f3ff' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Cyberpunk grid lines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(to bottom, transparent 99%, rgba(0, 243, 255, 0.05) 99%),
+                linear-gradient(to right, transparent 99%, rgba(0, 243, 255, 0.05) 99%);
+            background-size: 40px 40px;
+            opacity: 0.2;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Scanlines effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.05) 3px,
+                rgba(0, 0, 0, 0.05) 3px
+            );
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+                text-shadow: 0 0 5px var(--neon-quantum);
+            }
+            1.5% {
+                transform: translate(-2px, 0);
+                text-shadow: 0 0 7px var(--neon-signal);
+            }
+            2% {
+                transform: translate(2px, -2px);
+                text-shadow: 0 0 7px var(--neon-flux);
+            }
+            2.5% {
+                transform: translate(0);
+                text-shadow: 0 0 5px var(--neon-quantum);
+            }
+            39% {
+                transform: translate(0);
+                text-shadow: 0 0 5px var(--neon-quantum);
+            }
+            40% {
+                transform: translate(-1px, 1px);
+                text-shadow: 0 0 10px var(--neon-flux);
+            }
+            40.5% {
+                transform: translate(1px, -1px);
+                text-shadow: 0 0 10px var(--neon-quantum);
+            }
+            41% {
+                transform: translate(0);
+                text-shadow: 0 0 5px var(--neon-quantum);
+            }
+            100% {
+                transform: translate(0);
+                text-shadow: 0 0 5px var(--neon-quantum);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: rgba(255, 51, 102, 0.4); box-shadow: 0 0 5px rgba(255, 51, 102, 0.3); }
+            50% { border-color: rgba(255, 51, 102, 1); box-shadow: 0 0 15px rgba(255, 51, 102, 0.6); }
+            100% { border-color: rgba(255, 51, 102, 0.4); box-shadow: 0 0 5px rgba(255, 51, 102, 0.3); }
+        }
+
+        @keyframes scanner {
+            0% { left: 0; }
+            100% { left: calc(100% - 2px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes targetPulse {
+            0% { background-color: rgba(0, 255, 157, 0.05); }
+            50% { background-color: rgba(0, 255, 157, 0.15); }
+            100% { background-color: rgba(0, 255, 157, 0.05); }
+        }
+
+        @keyframes warningFlash {
+            0% { opacity: 0.7; }
+            25% { opacity: 1; }
+            50% { opacity: 0.7; }
+            75% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulseBox {
+            0% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 51, 102, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.3); }
+        }
+
+        @keyframes typingDots {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-3px); opacity: 1; }
+        }
+
+        @keyframes spinnerRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes dataPulse {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.7; transform: scale(0.99); }
+            50% { opacity: 1; transform: scale(1.01); }
+        }
+
+        /* ===== Core UI Elements ===== */
+        
+        /* Glow effect */
+        .glow {
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--bg-secondary);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--neon-quantum);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 11px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .alert-popup-metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        .alert-popup-metric-value.highlight {
+            color: var(--neon-alert);
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+        }
+
+        .alert-popup-message {
+            font-size: 13px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .alert-popup-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .alert-popup-btn {
+            flex: 1;
+            background-color: transparent;
+            border: 1px solid var(--neon-alert);
+            color: var(--neon-alert);
+            padding: 8px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .alert-popup-btn:hover {
+            background-color: rgba(255, 51, 102, 0.1);
+            color: var(--neon-alert);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .alert-popup-btn.secondary {
+            border-color: rgba(0, 243, 255, 0.3);
+            color: var(--neon-quantum);
+        }
+
+        .alert-popup-btn.secondary:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Data Quality Indicator */
+        .data-quality {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .quality-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quality-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .quality-dot.high {
+            background-color: var(--neon-confirm);
+            box-shadow: 0 0 5px var(--neon-confirm);
+        }
+
+        .quality-dot.medium {
+            background-color: #FF9900;
+            box-shadow: 0 0 5px #FF9900;
+        }
+
+        .quality-dot.low {
+            background-color: var(--neon-alert);
+            box-shadow: 0 0 5px var(--neon-alert);
+        }
+
+        /* Pattern Recognition */
+        .pattern-recognition {
+            margin-top: 12px;
+        }
+
+        .pattern-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .pattern-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .pattern-probability {
+            font-family: var(--font-mono);
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Sound toggle */
+        .sound-toggle {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sound-toggle:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+            background-color: rgba(0, 243, 255, 0.1);
+        }
+
+        .sound-toggle.active {
+            color: var(--neon-quantum);
+            opacity: 1;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(7, 7, 33, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-spinner {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            animation: spinnerRotate 2s linear infinite;
+        }
+
+        .loading-spinner::before {
+            border-top-color: var(--neon-quantum);
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        .loading-spinner::after {
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: var(--neon-signal);
+            border-left-color: transparent;
+            animation-delay: 1s;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        .typing-dots {
+            display: flex;
+            margin-left: 5px;
+        }
+
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background-color: var(--neon-quantum);
+            animation: typingDots 1.5s infinite ease;
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Alert counter */
+        .alert-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--neon-alert);
+            color: var(--text-primary);
+            font-size: 11px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        /* Multi-timeframe analysis card */
+        .timeframe-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .timeframe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .timeframe-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px;
+            background-color: rgba(7, 7, 30, 0.4);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .timeframe-label {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timeframe-value {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        .timeframe-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .timeframe-indicator.positive {
+            color: var(--neon-confirm);
+            border-color: rgba(0, 255, 157, 0.3);
+        }
+
+        .timeframe-indicator.negative {
+            color: var(--neon-alert);
+            border-color: rgba(255, 51, 102, 0.3);
+        }
+
+        .timeframe-indicator.neutral {
+            color: var(--neon-quantum);
+            border-color: rgba(0, 243, 255, 0.3);
+        }
+
+        /* Real-time data metrics */
+        .real-time-metrics {
+            margin-top: 12px;
+            padding: 10px;
+            background-color: rgba(0, 243, 255, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .real-time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .real-time-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--neon-quantum);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .real-time-title i {
+            color: var(--neon-quantum);
+            animation: pulse 2s infinite;
+        }
+
+        .real-time-update {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            opacity: 0.7;
+        }
+
+        .real-time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .real-time-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            padding: 6px 8px;
+            background-color: rgba(7, 7, 30, 0.4);
+            border-radius: 3px;
+        }
+
+        .real-time-label {
+            opacity: 0.8;
+        }
+
+        .real-time-value {
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        /* Critical breakout zone indicator */
+        .critical-zone {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(0, 255, 157, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            animation: targetPulse 3s infinite;
+        }
+
+        .critical-zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .critical-zone-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--neon-confirm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .critical-zone-title i {
+            color: var(--neon-confirm);
+        }
+
+        .critical-zone-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--neon-confirm);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .critical-zone-status.in-zone {
+            animation: pulse 2s infinite;
+        }
+
+        .critical-zone-chart {
+            height: 30px;
+            position: relative;
+            background-color: rgba(7, 7, 30, 0.5);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .zone-range {
+            position: absolute;
+            height: 100%;
+            background-color: rgba(0, 255, 157, 0.2);
+            border-left: 1px dashed rgba(0, 255, 157, 0.5);
+            border-right: 1px dashed rgba(0, 255, 157, 0.5);
+        }
+
+        .current-value {
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        .current-value::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        .zone-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            font-family: var(--font-mono);
+        }
+
+        .zone-label {
+            opacity: 0.7;
+        }
+
+        .zone-label.highlight {
+            color: var(--neon-confirm);
+            opacity: 1;
+        }
+
+        .critical-zone-message {
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(7, 7, 33, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--neon-quantum);
+            border-radius: 6px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 16px;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--neon-quantum);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .api-key-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 14px;
+            font-size: 10px;
+            margin-left: 5px;
+            cursor: help;
+            position: relative;
+            color: var(--neon-quantum);
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(7, 7, 33, 0.9);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 11px;
+            font-weight: normal;
+            letter-spacing: normal;
+            text-transform: none;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-mono);
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .toggle-visibility:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+        }
+
+        .form-submit {
+            background-color: transparent;
+            border: 1px solid var(--neon-quantum);
+            color: var(--neon-quantum);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .form-submit:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .form-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-message.error {
+            background-color: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            color: var(--neon-alert);
+        }
+
+        .form-message.success {
+            background-color: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--neon-confirm);
+        }
+
+        /* Filter dropdown */
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            opacity: 0.7;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-button:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+            background-color: rgba(0, 243, 255, 0.1);
+        }
+
+        .filter-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background-color: rgba(7, 7, 33, 0.95);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            padding: 5px;
+            z-index: 10;
+            min-width: 180px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-menu.show {
+            display: block;
+            animation: fadeIn 0.2s;
+        }
+
+        .filter-option {
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-option:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            transform: translateX(3px);
+        }
+
+        .filter-option.active {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-quantum);
+        }
+
+        .filter-option i {
+            width: 14px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Switch toggle */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(7, 7, 30, 0.6);
+            transition: .3s;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 2px;
+            background-color: var(--text-primary);
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-quantum);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(19px);
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Notification sound */
+        .notification-sound {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scanlines effect -->
+    <div class="scanlines"></div>
+
+    <!-- Notification sound -->
+    <audio id="alertSound" class="notification-sound">
+        <source src="https://cdnjs.cloudflare.com/ajax/libs/sound-effects/1.0.0/alerts/alert-3.mp3" type="audio/mpeg">
+    </audio>
+
+    <header>
+        <div class="logo-container">
+            <i class="fas fa-satellite logo-icon"></i>
+            <div class="logo">PHANTOM_EDGE</div>
+            <div class="logo-version">v3.7.9</div>
+            <div class="system-status" id="connectionStatus">
+                <div class="status-indicator disconnected"></div>
+                <span class="status-text">OFFLINE</span>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="sound-toggle active" id="soundToggle" title="Toggle Alert Sounds">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="btn" id="settingsBtn">
+                <i class="fas fa-cog"></i> Configure
+            </button>
+            <button class="btn" id="addStockBtn">
+                <i class="fas fa-plus"></i> Add Asset
+            </button>
+            <button class="btn alert" id="alertsBtn" style="position: relative;">
+                <i class="fas fa-bolt"></i> Breakout Alerts
+                <span class="alert-counter" id="alertCounter" style="display: none;">0</span>
+            </button>
+            <a href="https://www.webull.com/referral" target="_blank" class="btn special">
+                <i class="fas fa-rocket"></i> UPGRADE ON WEBULL
+            </a>
+        </div>
+    </header>
+
+    <div class="ticker-tape">
+        <div class="ticker-tape-container" id="tickerTape">
+            <!-- Dynamic ticker content will go here -->
+        </div>
+    </div>
+
+    <main>
+        <!-- Watchlist Panel -->
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <div class="panel-title">
+                        <i class="fas fa-satellite-dish"></i> Asset Scanner
+                    </div>
+                    <div class="panel-subtitle">Real-time breakout detection engine</div>
+                </div>
+                <div class="alert-level" id="alertLevelIndicator">
+                    <i class="fas fa-shield-alt"></i> SYSTEM ARMED
+                </div>
+            </div>
+            <div class="watchlist-container">
+                <div class="search-controls">
+                    <div class="stock-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="stockSearch" placeholder="Search assets...">
+                    </div>
+                    <div class="filter-tags">
+                        <div class="filter-tag active">All</div>
+                        <div class="filter-tag alert">Breakout Zone</div>
+                        <div class="filter-tag">8-10%</div>
+                        <div class="filter-tag">10-13%</div>
+                        <div class="filter-tag">High Volume</div>
+                    </div>
+                    <div class="breakout-filter">
+                        <div class="breakout-label">
+                            <i class="fas fa-crosshairs"></i> Target Zone
+                        </div>
+                        <div class="breakout-range">8.0% - 13.0%</div>
+                    </div>
+                </div>
+                <div class="watchlist" id="watchlist">
+                    <div class="loading-overlay" id="watchlistLoading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">
+                            Initializing pE-QuantumEdge™ Engine
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stock cards will be dynamically generated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Detail Panel -->
+        <section class="panel">
+            <div class="detail-header" id="stockDetailHeader">
+                <div class="stock-title">
+                    <div class="stock-title-primary" id="stockSymbolTitle">
+                        <i class="fas fa-crosshairs"></i> Select asset for detailed analysis
+                    </div>
+                    <div class="stock-title-secondary" id="stockNameTitle">
+                        PrecisionCore™ targets assets in critical 8-13% breakout window
+                    </div>
+                    <div class="target-zone-info">
+                        <i class="fas fa-bullseye"></i> Critical Breakout Zone: 8.0% - 13.0%
+                    </div>
+                </div>
+                <div class="stock-metrics-large" id="stockMetricsLarge" style="display: none;">
+                    <div class="metric">
+                        <div class="metric-label">Price</div>
+                        <div class="metric-value" id="currentPrice">$0.00</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Change</div>
+                        <div class="metric-value" id="dayChange">0.00%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Volume Ratio</div>
+                        <div class="metric-value" id="volumeRatio">0.0x</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Breakout Probability</div>
+                        <div class="metric-value highlight" id="breakoutProbability">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-content">
+                <div class="chart-section">
+                    <div class="chart-container">
+                        <div class="chart-placeholder" id="chartPlaceholder">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Select an asset to view predictive breakout analysis</div>
+                        </div>
+                        <canvas id="stockChart" style="display: none;"></canvas>
+                        <div class="chart-overlay"></div>
+                        <div class="target-zone-overlay" id="targetZoneOverlay" style="display: none;"></div>
+                        <div class="target-zone-label" id="targetZoneLabel" style="display: none;">8-13% BREAKOUT ZONE</div>
+                        <div class="chart-scanner" id="chartScanner" style="display: none;"></div>
+                        <div class="chart-crosshair" id="chartCrosshair" style="display: none;">
+                            <div class="crosshair-vertical"></div>
+                            <div class="crosshair-horizontal"></div>
+                            <div class="crosshair-label" id="crosshairX"></div>
+                            <div class="crosshair-label" id="crosshairY"></div>
+                        </div>
+                    </div>
+                    <div class="chart-time-controls">
+                        <button class="time-btn active" data-timeframe="1D">1D</button>
+                        <button class="time-btn" data-timeframe="1W">1W</button>
+                        <button class="time-btn" data-timeframe="1M">1M</button>
+                        <button class="time-btn" data-timeframe="3M">3M</button>
+                        <button class="time-btn" data-timeframe="1Y">1Y</button>
+                        <button class="time-btn" data-timeframe="RT">REAL-TIME</button>
+                    </div>
+                </div>
+                <div class="analysis-section">
+                    <div class="metrics-card breakout-analysis" id="breakoutAnalysis" style="display: none;">
+                        <div class="analysis-header">
+                            <div class="analysis-title">
+                                <i class="fas fa-bolt"></i> Breakout Analysis
+                            </div>
+                            <div class="analysis-status" id="breakoutStatus">Analyzing...</div>
+                        </div>
+                        <div class="analysis-criteria">
+                            <div class="criteria-item">
+                                <div class="criteria-label">
+                                    <i class="fas fa-chart-line"></i> Price Change
+                                </div>
+                                <div class="criteria-value" id="priceIncreaseCriteria">
+                                    <span id="priceIncreaseValue">--</span>
+                                    <div class="criteria-icon pass" id="priceIncreaseIcon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="criteria-item">
+                                <div class="criteria-label">
+                                    <i class="fas fa-chart-bar"></i> Volume Surge
+                                </div>
+                                <div class="criteria-value" id="volumeIncreaseCriteria">
+                                    <span id="volumeIncreaseValue">--</span>
+                                    <div class="criteria-icon pass" id="volumeIncreaseIcon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="criteria-item">
+                                <div class="criteria-label">
+                                    <i class="fas fa-bullseye"></i> Target Range
+                                </div>
+                                <div class="criteria-value" id="targetRangeCriteria">
+                                    <span id="targetRangeValue">--</span>
+                                    <div class="criteria-icon pass" id="targetRangeIcon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="critical-zone" id="criticalZone">
+                            <div class="critical-zone-header">
+                                <div class="critical-zone-title">
+                                    <i class="fas fa-crosshairs"></i> Breakout Detection Status
+                                </div>
+                                <div class="critical-zone-status in-zone" id="zoneStatus">IN TARGET ZONE</div>
+                            </div>
+                            <div class="critical-zone-chart">
+                                <div class="zone-range" style="left: 40%; width: 25%;"></div>
+                                <div class="current-value" style="left: 45%;"></div>
+                            </div>
+                            <div class="zone-labels">
+                                <div class="zone-label">0%</div>
+                                <div class="zone-label highlight">8%</div>
+                                <div class="zone-label highlight">13%</div>
+                                <div class="zone-label">25%+</div>
+                            </div>
+                            <div class="critical-zone-message">
+                                Asset is currently in optimal breakout detection zone. pE-QuantumEdge™ identifies 8-13% moves as the highest probability window for continued momentum.
+                            </div>
+                        </div>
+                        
+                        <div class="advanced-analysis">
+                            <div class="analysis-section-title">
+                                <i class="fas fa-microchip"></i> Algorithm Analysis
+                            </div>
+                            <div class="algorithm-metrics">
+                                <div class="algorithm-metric">
+                                    <div class="algorithm-label">
+                                        <i class="fas fa-chart-pie"></i> Breakout Probability
+                                    </div>
+                                    <div class="algorithm-value">92.7%</div>
+                                </div>
+                                <div class="algorithm-metric">
+                                    <div class="algorithm-label">
+                                        <i class="fas fa-tachometer-alt"></i> Momentum Factor
+                                    </div>
+                                    <div class="algorithm-value">4.3x</div>
+                                </div>
+                                <div class="algorithm-metric">
+                                    <div class="algorithm-label">
+                                        <i class="fas fa-signal"></i> Signal Strength
+                                    </div>
+                                    <div class="algorithm-value">Strong</div>
+                                </div>
+                            </div>
+                            
+                            <div class="volume-analysis">
+                                <div class="analysis-section-title">
+                                    <i class="fas fa-chart-bar"></i> Real-Time Volume Analysis
+                                </div>
+                                <div class="volume-bar-container">
+                                    <div class="volume-bar" style="width: 65%;"></div>
+                                    <div class="volume-marker" style="left: 30%;"></div>
+                                    <div class="volume-marker target" style="left: 50%;"></div>
+                                </div>
+                                <div class="volume-labels">
+                                    <div>Avg Volume</div>
+                                    <div>Current: 2.6x Average</div>
+                                </div>
+                            </div>
+                            
+                            <div class="signal-metrics">
+                                <div class="signal-metric">
+                                    <div class="signal-label">Signal</div>
+                                    <div class="signal-value buy">BUY</div>
+                                </div>
+                                <div class="signal-metric">
+                                    <div class="signal-label">Strength</div>
+                                    <div class="signal-value">8.7</div>
+                                </div>
+                                <div class="signal-metric">
+                                    <div class="signal-label">Confidence</div>
+                                    <div class="signal-value">94%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="real-time-metrics">
+                                <div class="real-time-header">
+                                    <div class="real-time-title">
+                                        <i class="fas fa-bolt"></i> Real-Time Indicators
+                                    </div>
+                                    <div class="real-time-update">Updated: Just now</div>
+                                </div>
+                                <div class="real-time-grid">
+                                    <div class="real-time-metric">
+                                        <div class="real-time-label">VWAP Deviation</div>
+                                        <div class="real-time-value">+2.7%</div>
+                                    </div>
+                                    <div class="real-time-metric">
+                                        <div class="real-time-label">RSI (5m)</div>
+                                        <div class="real-time-value">68.3</div>
+                                    </div>
+                                    <div class="real-time-metric">
+                                        <div class="real-time-label">Buy/Sell Ratio</div>
+                                        <div class="real-time-value">3.2:1</div>
+                                    </div>
+                                    <div class="real-time-metric">
+                                        <div class="real-time-label">Price Velocity</div>
+                                        <div class="real-time-value">High</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeframe-analysis">
+                                <div class="analysis-section-title">
+                                    <i class="fas fa-clock"></i> Multi-Timeframe Analysis
+                                </div>
+                                <div class="timeframe-grid">
+                                    <div class="timeframe-item">
+                                        <div class="timeframe-label">5 Min</div>
+                                        <div class="timeframe-value">+2.1%</div>
+                                        <div class="timeframe-indicator positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </div>
+                                    </div>
+                                    <div class="timeframe-item">
+                                        <div class="timeframe-label">15 Min</div>
+                                        <div class="timeframe-value">+5.3%</div>
+                                        <div class="timeframe-indicator positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </div>
+                                    </div>
+                                    <div class="timeframe-item">
+                                        <div class="timeframe-label">1 Hour</div>
+                                        <div class="timeframe-value">+9.7%</div>
+                                        <div class="timeframe-indicator positive">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="pattern-recognition">
+                                <div class="analysis-section-title">
+                                    <i class="fas fa-signature"></i> Pattern Recognition
+                                </div>
+                                <div class="pattern-item">
+                                    <div class="pattern-name">
+                                        <i class="fas fa-chart-line"></i> Volume Breakout
+                                    </div>
+                                    <div class="pattern-probability">92%</div>
+                                </div>
+                                <div class="pattern-item">
+                                    <div class="pattern-name">
+                                        <i class="fas fa-chart-line"></i> Bull Flag
+                                    </div>
+                                    <div class="pattern-probability">87%</div>
+                                </div>
+                                <div class="pattern-item">
+                                    <div class="pattern-name">
+                                        <i class="fas fa-chart-line"></i> MACD Crossover
+                                    </div>
+                                    <div class="pattern-probability">94%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="data-quality">
+                                <div class="quality-indicator">
+                                    <div class="quality-dot high"></div>
+                                    <span>Data Reliability:</span>
+                                </div>
+                                <span>High (99.998%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-card">
+                        <div class="metrics-card-title">
+                            <i class="fas fa-bolt"></i> Recent Breakout Alerts
+                            <div class="filter-dropdown">
+                                <button class="filter-button" id="filterButton">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                                <div class="filter-menu" id="filterMenu">
+                                    <div class="filter-option active" data-filter="all">
+                                        <i class="fas fa-check"></i> All Alerts
+                                    </div>
+                                    <div class="filter-option" data-filter="today">
+                                        <i class="fas fa-calendar-day"></i> Today Only
+                                    </div>
+                                    <div class="filter-option" data-filter="8to13">
+                                        <i class="fas fa-bullseye"></i> 8-13% Zone
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alerts-card" id="alertsList">
+                            <div class="empty-alerts">
+                                <i class="fas fa-satellite-dish"></i>
+                                <div>No breakout alerts detected yet</div>
+                                <div>pE-QuantumEdge™ engine actively scanning market</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="webull-cta">
+                        <div class="webull-header">
+                            <div class="webull-logo">W</div>
+                            <div class="webull-title">PHANTOM_EDGE Premium on WebULL</div>
+                        </div>
+                        <div class="webull-content">
+                            Get unlimited access to advanced breakout detection features, proprietary algorithms, and priority alerts for 8-13% breakout opportunities before they fully materialize.
+                        </div>
+                        <a href="https://www.webull.com/referral" target="_blank" class="webull-button">
+                            ACTIVATE PREMIUM ACCESS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-cog"></i> System Configuration</div>
+                <button class="modal-close" id="closeSettingsBtn">&times;</button>
+            </div>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="minPriceMovement" class="form-label">Min Price Movement (%) <span class="tooltip-icon">?<span class="tooltip-text">Minimum price increase percentage to trigger breakout detection</span></span></label>
+                    <input type="number" id="minPriceMovement" min="1" max="20" step="0.5" value="8">
+                </div>
+                <div class="form-group">
+                    <label for="maxPriceMovement" class="form-label">Max Price Movement (%) <span class="tooltip-icon">?<span class="tooltip-text">Maximum price increase percentage (upper bound of target breakout zone)</span></span></label>
+                    <input type="number" id="maxPriceMovement" min="1" max="30" step="0.5" value="13">
+                </div>
+                <div class="form-group">
+                    <label for="volumeMultiplier" class="form-label">Volume Threshold <span class="tooltip-icon">?<span class="tooltip-text">Minimum volume multiplier compared to average daily volume</span></span></label>
+                    <input type="number" id="volumeMultiplier" min="1" max="10" step="0.5" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="updateInterval" class="form-label">Refresh Rate (ms) <span class="tooltip-icon">?<span class="tooltip-text">Data update frequency in milliseconds (lower = faster but more resource intensive)</span></span></label>
+                    <input type="number" id="updateInterval" min="250" max="5000" step="250" value="500">
+                </div>
+                <div class="form-group api-key-group">
+                    <label for="apiKey" class="form-label">API Key <span class="tooltip-icon">?<span class="tooltip-text">Your market data provider API key</span></span></label>
+                    <input type="password" id="apiKey" placeholder="Enter your API key">
+                    <button type="button" class="toggle-visibility" id="toggleApiVisibility">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="connectionType" class="form-label">Connection Type <span class="tooltip-icon">?<span class="tooltip-text">Websocket provides real-time updates, REST uses polling at specified intervals</span></span></label>
+                    <select id="connectionType">
+                        <option value="websocket">Websocket (Real-time)</option>
+                        <option value="rest">REST API (Polling)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alertThreshold" class="form-label">Breakout Probability Threshold <span class="tooltip-icon">?<span class="tooltip-text">Minimum breakout probability percentage required to trigger alerts</span></span></label>
+                    <input type="number" id="alertThreshold" min="50" max="99" value="85">
+                </div>
+                <button type="submit" class="form-submit">Initialize System</button>
+                <div id="settingsMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Stock Modal -->
+    <div class="modal" id="addStockModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-plus"></i> Add Asset to Watchlist</div>
+                <button class="modal-close" id="closeAddStockBtn">&times;</button>
+            </div>
+            <form id="addStockForm">
+                <div class="form-group">
+                    <label for="stockSymbol" class="form-label">Asset Symbol <span class="tooltip-icon">?<span class="tooltip-text">Enter ticker symbol (e.g., AAPL, TSLA, BTC-USD)</span></span></label>
+                    <input type="text" id="stockSymbol" placeholder="Enter ticker symbol" required>
+                </div>
+                <div class="form-group">
+                    <label for="watchPriority" class="form-label">Watch Priority</label>
+                    <select id="watchPriority">
+                        <option value="high">High Priority (Immediate Alerts)</option>
+                        <option value="normal" selected>Normal Priority</option>
+                        <option value="low">Low Priority (Background Scanning)</option>
+                    </select>
+                </div>
+                <button type="submit" class="form-submit">Add to Watchlist</button>
+                <div id="addStockMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alerts Modal -->
+    <div class="modal" id="alertsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-bolt"></i> Breakout Alert History</div>
+                <button class="modal-close" id="closeAlertsBtn">&times;</button>
+            </div>
+            <div class="alerts-card" id="allAlertsList" style="max-height: 400px;">
+                <!-- All alerts will be shown here -->
+                <div class="empty-alerts">
+                    <i class="fas fa-satellite-dish"></i>
+                    <div>No breakout alerts detected yet</div>
+                    <div>pE-QuantumEdge™ engine actively scanning market</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time breakout alert popup -->
+    <div class="alert-popup" id="alertPopup" style="display: none;">
+        <div class="alert-popup-header">
+            <div class="alert-popup-title">
+                <i class="fas fa-bolt alert-popup-icon"></i> BREAKOUT DETECTED
+            </div>
+            <button class="alert-popup-close" id="closeAlertPopup">&times;</button>
+        </div>
+        <div class="alert-popup-content">
+            <div class="alert-popup-stock">
+                AAPL
+                <div class="alert-popup-price">$208.76</div>
+            </div>
+            <div class="alert-popup-metrics">
+                <div class="alert-popup-metric">
+                    <div class="alert-popup-metric-label">Change</div>
+                    <div class="alert-popup-metric-value highlight">+10.3%</div>
+                </div>
+                <div class="alert-popup-metric">
+                    <div class="alert-popup-metric-label">Volume</div>
+                    <div class="alert-popup-metric-value highlight">3.8x Avg</div>
+                </div>
+                <div class="alert-popup-metric">
+                    <div class="alert-popup-metric-label">Probability</div>
+                    <div class="alert-popup-metric-value highlight">93%</div>
+                </div>
+            </div>
+            <div class="alert-popup-message">
+                Asset is currently in the critical 8-13% breakout zone with high volume and strong momentum indicators. Historical patterns show 87% probability of continued upward momentum.
+            </div>
+            <div class="alert-popup-actions">
+                <button class="alert-popup-btn" id="viewAlertDetails">VIEW DETAILS</button>
+                <button class="alert-popup-btn secondary" id="dismissAlert">DISMISS</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // This would be the JavaScript implementation for the PHANTOM_EDGE system
+        // In a real application, this would connect to market data APIs
+        // and implement all the complex breakout detection algorithms
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize application and show settings modal
+            document.getElementById('settingsModal').style.display = 'flex';
+            
+            // Simulated implementation would go here
+            // Including real-time data connections, breakout detection algorithms,
+            // and all the cyberpunk UI interactions
+        });
+    </script>
+</body>
+</html>: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--neon-quantum);
+            text-shadow: 0 0 10px rgba(0, 243, 255, var(--glow-intensity));
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .logo::before {
+            content: 'PHANTOM_EDGE';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: none;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 
+                2px 0 2px rgba(255, 0, 245, 0.6),
+                -2px 0 2px rgba(0, 243, 255, 0.6);
+            opacity: 0.4;
+            animation: glitch 10s infinite;
+        }
+
+        .logo-version {
+            font-size: 11px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            margin-left: 10px;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-flux));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-icon {
+            font-size: 20px;
+            color: var(--neon-quantum);
+            animation: pulse 3s infinite;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(7, 7, 30, 0.8);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--neon-confirm);
+            box-shadow: 0 0 8px var(--neon-confirm);
+        }
+
+        .status-indicator.disconnected {
+            background-color: var(--neon-alert);
+            box-shadow: 0 0 8px var(--neon-alert);
+        }
+
+        .status-indicator.connecting {
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 8px var(--neon-quantum);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-text {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid var(--neon-quantum);
+            color: var(--neon-quantum);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::after {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn.alert {
+            border-color: var(--neon-alert);
+            color: var(--neon-alert);
+        }
+
+        .btn.alert:hover {
+            background-color: rgba(255, 51, 102, 0.1);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+        }
+
+        .btn.special {
+            border: none;
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.5), rgba(0, 243, 255, 0.5));
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .btn.special:hover {
+            box-shadow: 0 0 20px rgba(157, 0, 255, 0.5);
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.7), rgba(0, 243, 255, 0.7));
+        }
+
+        .btn i {
+            font-size: 14px;
+        }
+
+        .ticker-tape {
+            position: relative;
+            padding: 6px 0;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .ticker-tape-container {
+            display: flex;
+            gap: 30px;
+            animation: tickerTape 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes tickerTape {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ticker-symbol {
+            font-weight: bold;
+        }
+
+        .ticker-value.up {
+            color: var(--neon-confirm);
+        }
+
+        .ticker-value.down {
+            color: var(--neon-alert);
+        }
+
+        /* Main content */
+        main {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 15px;
+            max-width: 1800px;
+            margin: 0 auto;
+            height: calc(100vh - 107px);
+        }
+
+        @media (max-width: 1200px) {
+            main {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        .panel {
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.02), transparent) 0 0 / 200% 100%,
+                radial-gradient(circle at 85% 15%, rgba(157, 0, 255, 0.03), transparent 25%) 0 0 / 100% 100%;
+            pointer-events: none;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+        }
+
+        .panel-title i {
+            color: var(--neon-quantum);
+            font-size: 14px;
+        }
+
+        .panel-subtitle {
+            font-size: 11px;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        /* Alert Level Indicator */
+        .alert-level {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background-color: rgba(7, 7, 30, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .alert-level.critical {
+            border-color: var(--neon-alert);
+            color: var(--neon-alert);
+            animation: pulse 2s infinite;
+        }
+
+        .alert-level.critical i {
+            color: var(--neon-alert);
+        }
+
+        .alert-level.high {
+            border-color: #FF9900;
+            color: #FF9900;
+        }
+
+        .alert-level.high i {
+            color: #FF9900;
+        }
+
+        .alert-level.normal {
+            border-color: var(--neon-confirm);
+            color: var(--neon-confirm);
+        }
+
+        .alert-level.normal i {
+            color: var(--neon-confirm);
+        }
+
+        /* ===== Watchlist Section ===== */
+        .watchlist-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .search-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stock-search {
+            position: relative;
+        }
+
+        .stock-search input {
+            width: 100%;
+            padding: 10px 15px 10px 35px;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-mono);
+        }
+
+        .stock-search input:focus {
+            outline: none;
+            border-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .stock-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-quantum);
+            opacity: 0.7;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            font-size: 11px;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tag:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-quantum);
+        }
+
+        .filter-tag.active {
+            background-color: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-quantum);
+            color: var(--neon-quantum);
+        }
+
+        .filter-tag.alert {
+            background-color: rgba(255, 51, 102, 0.1);
+            border-color: var(--neon-alert);
+            color: var(--neon-alert);
+        }
+
+        .filter-tag.alert.active {
+            background-color: rgba(255, 51, 102, 0.2);
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.2);
+        }
+
+        .breakout-filter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            padding: 8px 12px;
+        }
+
+        .breakout-label {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neon-quantum);
+        }
+
+        .breakout-range {
+            font-size: 12px;
+            font-family: var(--font-mono);
+            font-weight: bold;
+            padding: 4px 10px;
+            background-color: rgba(0, 243, 255, 0.1);
+            border-radius: 3px;
+            color: var(--neon-quantum);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .watchlist {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 5px;
+            position: relative;
+        }
+
+        .watchlist::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .watchlist::-webkit-scrollbar-track {
+            background: rgba(7, 7, 30, 0.3);
+            border-radius: 2px;
+        }
+
+        .watchlist::-webkit-scrollbar-thumb {
+            background-color: var(--neon-quantum);
+            border-radius: 2px;
+            box-shadow: 0 0 5px var(--neon-quantum);
+        }
+
+        .stock-card {
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-card:hover {
+            background-color: rgba(0, 243, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stock-card.selected {
+            border-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .stock-card.selected::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .stock-card.breakout-zone {
+            background: var(--breakout-zone);
+            border-color: rgba(0, 255, 157, 0.3);
+            animation: targetPulse 2s infinite;
+        }
+
+        .stock-card.breakout-alert {
+            border-color: var(--neon-alert);
+            animation: borderPulse 2s infinite;
+        }
+
+        .stock-card.breakout-alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--neon-alert);
+            box-shadow: 0 0 10px var(--neon-alert);
+        }
+
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .stock-symbol-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-symbol {
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-tag {
+            display: inline-block;
+            font-size: 9px;
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-quantum);
+            padding: 2px 5px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stock-tag.breakout {
+            background-color: rgba(255, 51, 102, 0.1);
+            color: var(--neon-alert);
+            animation: pulse 2s infinite;
+        }
+
+        .stock-tag.target-zone {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--neon-confirm);
+        }
+
+        .stock-name {
+            font-size: 11px;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            font-family: var(--font-mono);
+        }
+
+        .stock-metrics {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+        }
+
+        .stock-price {
+            font-weight: bold;
+            font-size: 15px;
+            font-family: var(--font-mono);
+            letter-spacing: 0.5px;
+        }
+
+        .stock-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .stock-change.positive {
+            color: var(--neon-confirm);
+            background-color: rgba(0, 255, 157, 0.1);
+        }
+
+        .stock-change.negative {
+            color: var(--neon-alert);
+            background-color: rgba(255, 51, 102, 0.1);
+        }
+
+        .stock-change i {
+            font-size: 9px;
+        }
+
+        .stock-volume {
+            font-size: 10px;
+            opacity: 0.8;
+            font-family: var(--font-mono);
+        }
+
+        /* Volume indicator bar */
+        .volume-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            transition: width 0.3s ease;
+        }
+
+        /* Target zone indicator */
+        .target-zone-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 20px 20px 0;
+            border-color: transparent var(--neon-confirm) transparent transparent;
+            opacity: 0.7;
+        }
+
+        /* ===== Detail Section ===== */
+        .stock-detail {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .stock-title {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .stock-title-primary {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--neon-quantum);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+        }
+
+        .stock-title-secondary {
+            font-size: 13px;
+            opacity: 0.7;
+            font-family: var(--font-mono);
+        }
+
+        .stock-metrics-large {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(7, 7, 30, 0.6);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            min-width: 90px;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        .metric-value.positive {
+            color: var(--neon-confirm);
+        }
+
+        .metric-value.negative {
+            color: var(--neon-alert);
+        }
+
+        .metric-value.highlight {
+            color: var(--neon-quantum);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        .metric-value.alert {
+            color: var(--neon-alert);
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+        }
+
+        /* Target Zone Info */
+        .target-zone-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--neon-confirm);
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .target-zone-info i {
+            color: var(--neon-confirm);
+        }
+
+        /* Detail content */
+        .detail-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1400px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        .chart-container {
+            flex: 1;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 15px;
+            color: rgba(224, 224, 255, 0.5);
+        }
+
+        .chart-placeholder i {
+            font-size: 40px;
+            color: rgba(0, 243, 255, 0.3);
+        }
+
+        .chart-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .chart-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(7, 7, 30, 0) 0%, rgba(7, 7, 30, 0) 90%, rgba(7, 7, 30, 0.3) 100%),
+                radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.03), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Target zone overlay */
+        .target-zone-overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 20%,
+                rgba(0, 255, 157, 0.05) 20%,
+                rgba(0, 255, 157, 0.05) 35%,
+                transparent 35%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .target-zone-label {
+            position: absolute;
+            right: 10px;
+            top: 27.5%;
+            background-color: rgba(7, 7, 30, 0.8);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--neon-confirm);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            z-index: 2;
+        }
+
+        .chart-scanner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: rgba(0, 243, 255, 0.5);
+            box-shadow: 
+                0 0 10px rgba(0, 243, 255, 0.5),
+                0 0 20px rgba(0, 243, 255, 0.3);
+            z-index: 2;
+            animation: scanner 4s linear infinite;
+        }
+
+        .chart-crosshair {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            display: none;
+        }
+
+        .crosshair-vertical,
+        .crosshair-horizontal {
+            position: absolute;
+            background-color: rgba(0, 243, 255, 0.3);
+            z-index: 2;
+        }
+
+        .crosshair-vertical {
+            width: 1px;
+            height: 100%;
+            top: 0;
+        }
+
+        .crosshair-horizontal {
+            height: 1px;
+            width: 100%;
+            left: 0;
+        }
+
+        .crosshair-label {
+            position: absolute;
+            background-color: rgba(7, 7, 33, 0.8);
+            border: 1px solid var(--neon-quantum);
+            border-radius: 3px;
+            padding: 3px 6px;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .chart-time-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .time-btn {
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 3px;
+            padding: 5px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .time-btn:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .time-btn.active {
+            border-color: var(--neon-quantum);
+            color: var(--neon-quantum);
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+        }
+
+        /* ===== Analysis Section ===== */
+        .analysis-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .analysis-section::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .analysis-section::-webkit-scrollbar-track {
+            background: rgba(7, 7, 30, 0.3);
+            border-radius: 2px;
+        }
+
+        .analysis-section::-webkit-scrollbar-thumb {
+            background-color: var(--neon-quantum);
+            border-radius: 2px;
+            box-shadow: 0 0 5px var(--neon-quantum);
+        }
+
+        .metrics-card {
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .metrics-card-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metrics-card-title i {
+            color: var(--neon-quantum);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .metric-item-label {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .metric-item-value {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        .metric-item-value.positive {
+            color: var(--neon-confirm);
+        }
+
+        .metric-item-value.negative {
+            color: var(--neon-alert);
+        }
+
+        .metric-item-value.highlight {
+            color: var(--neon-quantum);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Breakout Analysis Card */
+        .breakout-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .analysis-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--neon-quantum);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .analysis-title.alert {
+            color: var(--neon-alert);
+        }
+
+        .analysis-title.alert i {
+            color: var(--neon-alert);
+            animation: pulse 2s infinite;
+        }
+
+        .analysis-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .analysis-status.alert {
+            background-color: rgba(255, 51, 102, 0.1);
+            color: var(--neon-alert);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .analysis-status.normal {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--neon-confirm);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+
+        .analysis-status.warning {
+            background-color: rgba(255, 153, 0, 0.1);
+            color: #FF9900;
+            border: 1px solid rgba(255, 153, 0, 0.3);
+        }
+
+        .analysis-criteria {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(7, 7, 30, 0.4);
+            border-radius: 4px;
+            padding: 12px;
+        }
+
+        .criteria-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .criteria-label {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .criteria-label i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .criteria-value {
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+        }
+
+        .criteria-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 9px;
+        }
+
+        .criteria-icon.pass {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--neon-confirm);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+
+        .criteria-icon.fail {
+            background-color: rgba(255, 51, 102, 0.1);
+            color: var(--neon-alert);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .criteria-icon.warning {
+            background-color: rgba(255, 153, 0, 0.1);
+            color: #FF9900;
+            border: 1px solid rgba(255, 153, 0, 0.3);
+        }
+
+        /* Targeted breakout window */
+        .breakout-window {
+            background-color: rgba(0, 255, 157, 0.05);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .window-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .window-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--neon-confirm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-title i {
+            color: var(--neon-confirm);
+        }
+
+        .window-range {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+            color: var(--neon-confirm);
+        }
+
+        .window-description {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Advanced analysis section */
+        .advanced-analysis {
+            margin-top: 5px;
+        }
+
+        .analysis-section-title {
+            font-size: 12px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Volume Analysis */
+        .volume-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .volume-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(7, 7, 30, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .volume-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .volume-marker {
+            position: absolute;
+            top: -4px;
+            height: 14px;
+            width: 2px;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: translateX(-50%);
+        }
+
+        .volume-marker::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .volume-marker.target {
+            background-color: var(--neon-confirm);
+        }
+
+        .volume-marker.target::after {
+            background-color: var(--neon-confirm);
+        }
+
+        .volume-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 5px;
+            font-family: var(--font-mono);
+        }
+
+        /* Algorithm metrics */
+        .algorithm-metrics {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .algorithm-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .algorithm-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0.8;
+        }
+
+        .algorithm-value {
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        /* Buy/Sell Indicators */
+        .signal-metrics {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .signal-metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .signal-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .signal-value {
+            font-size: 18px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+
+        .signal-value.buy {
+            color: var(--neon-confirm);
+            text-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
+        }
+
+        .signal-value.sell {
+            color: var(--neon-alert);
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+        }
+
+        .signal-value.neutral {
+            color: var(--neon-quantum);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Recent Alerts Card */
+        .alerts-card {
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .alerts-card::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .alerts-card::-webkit-scrollbar-track {
+            background: rgba(7, 7, 30, 0.3);
+            border-radius: 2px;
+        }
+
+        .alerts-card::-webkit-scrollbar-thumb {
+            background-color: var(--neon-quantum);
+            border-radius: 2px;
+            box-shadow: 0 0 5px var(--neon-quantum);
+        }
+
+        .alert-item {
+            background-color: rgba(7, 7, 30, 0.4);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            animation: fadeIn 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background-color: var(--neon-alert);
+        }
+
+        .alert-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .alert-item-stock {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-item-time {
+            font-size: 10px;
+            opacity: 0.7;
+            font-family: var(--font-mono);
+        }
+
+        .alert-item-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .alert-item-metrics {
+            display: flex;
+            gap: 10px;
+        }
+
+        .alert-item-metric {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+        }
+
+        .alert-item-metric span {
+            font-weight: bold;
+        }
+
+        .alert-item-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .alert-action {
+            font-size: 10px;
+            padding: 3px 8px;
+            background-color: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .alert-action:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+        }
+
+        .alert-action.primary {
+            border-color: var(--neon-alert);
+            color: var(--neon-alert);
+        }
+
+        .alert-action.primary:hover {
+            background-color: rgba(255, 51, 102, 0.1);
+        }
+
+        .alert-item-icon {
+            color: var(--neon-alert);
+            animation: pulse 2s infinite;
+            font-size: 12px;
+        }
+
+        .empty-alerts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 10px;
+            opacity: 0.7;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .empty-alerts i {
+            font-size: 24px;
+            color: var(--neon-quantum);
+            opacity: 0.5;
+        }
+
+        /* WebULL Purchase Link */
+        .webull-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.1), rgba(0, 243, 255, 0.1));
+            border-radius: 4px;
+            border: 1px solid rgba(157, 0, 255, 0.2);
+        }
+
+        .webull-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .webull-logo {
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #121212;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .webull-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--neon-signal);
+            text-shadow: 0 0 5px rgba(157, 0, 255, 0.3);
+        }
+
+        .webull-content {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .webull-button {
+            background: linear-gradient(135deg, var(--neon-signal), var(--neon-quantum));
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .webull-button:hover {
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Real-time Alert Popup */
+        .alert-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(7, 7, 30, 0.95);
+            border: 1px solid var(--neon-alert);
+            border-radius: 6px;
+            width: 320px;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.5s forwards, pulseBox 2s infinite;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-popup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--neon-alert), var(--neon-signal));
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        .alert-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+            background-color: rgba(255, 51, 102, 0.1);
+        }
+
+        .alert-popup-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--neon-alert);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+
+        .alert-popup-icon {
+            color: var(--neon-alert);
+            animation: pulse 1.5s infinite;
+        }
+
+        .alert-popup-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+
+        .alert-popup-close:hover {
+            opacity: 1;
+            color: var(--neon-alert);
+        }
+
+        .alert-popup-content {
+            padding: 15px;
+        }
+
+        .alert-popup-stock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-popup-price {
+            font-size: 16px;
+            color: var(--neon-alert);
+            font-family: var(--font-mono);
+        }
+
+        .alert-popup-metrics {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+        }
+
+        .alert-popup-metric {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .alert-popup-metric-label {
+            font-size: 11px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .alert-popup-metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+        
+        .alert-popup-metric-value.highlight {
+            color: var(--neon-alert);
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+        }
+        
+        .alert-popup-message {
+            font-size: 13px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .alert-popup-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .alert-popup-btn {
+            flex: 1;
+            background-color: transparent;
+            border: 1px solid var(--neon-alert);
+            color: var(--neon-alert);
+            padding: 8px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .alert-popup-btn:hover {
+            background-color: rgba(255, 51, 102, 0.1);
+            color: var(--neon-alert);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .alert-popup-btn.secondary {
+            border-color: rgba(0, 243, 255, 0.3);
+            color: var(--neon-quantum);
+        }
+        
+        .alert-popup-btn.secondary:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+        
+        /* Data Quality Indicator */
+        .data-quality {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+        
+        .quality-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quality-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .quality-dot.high {
+            background-color: var(--neon-confirm);
+            box-shadow: 0 0 5px var(--neon-confirm);
+        }
+        
+        .quality-dot.medium {
+            background-color: #FF9900;
+            box-shadow: 0 0 5px #FF9900;
+        }
+        
+        .quality-dot.low {
+            background-color: var(--neon-alert);
+            box-shadow: 0 0 5px var(--neon-alert);
+        }
+        
+        /* Pattern Recognition */
+        .pattern-recognition {
+            margin-top: 12px;
+        }
+        
+        .pattern-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+        
+        .pattern-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .pattern-probability {
+            font-family: var(--font-mono);
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        /* Sound toggle */
+        .sound-toggle {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sound-toggle:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+            background-color: rgba(0, 243, 255, 0.1);
+        }
+        
+        .sound-toggle.active {
+            color: var(--neon-quantum);
+            opacity: 1;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(7, 7, 33, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        .loading-spinner {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            animation: spinnerRotate 2s linear infinite;
+        }
+        
+        .loading-spinner::before {
+            border-top-color: var(--neon-quantum);
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        
+        .loading-spinner::after {
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: var(--neon-signal);
+            border-left-color: transparent;
+            animation-delay: 1s;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        .typing-dots {
+            display: flex;
+            margin-left: 5px;
+        }
+        
+        .typing-dot {
+            width: 5px;
+            height: 5px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background-color: var(--neon-quantum);
+            animation: typingDots 1.5s infinite ease;
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Alert counter */
+        .alert-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--neon-alert);
+            color: var(--text-primary);
+            font-size: 11px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        /* Multi-timeframe analysis card */
+        .timeframe-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .timeframe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .timeframe-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px;
+            background-color: rgba(7, 7, 30, 0.4);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.1);
+        }
+        
+        .timeframe-label {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .timeframe-value {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+        
+        .timeframe-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+        
+        .timeframe-indicator.positive {
+            color: var(--neon-confirm);
+            border-color: rgba(0, 255, 157, 0.3);
+        }
+        
+        .timeframe-indicator.negative {
+            color: var(--neon-alert);
+            border-color: rgba(255, 51, 102, 0.3);
+        }
+        
+        .timeframe-indicator.neutral {
+            color: var(--neon-quantum);
+            border-color: rgba(0, 243, 255, 0.3);
+        }
+        
+        /* Real-time data metrics */
+        .real-time-metrics {
+            margin-top: 12px;
+            padding: 10px;
+            background-color: rgba(0, 243, 255, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .real-time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .real-time-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--neon-quantum);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .real-time-title i {
+            color: var(--neon-quantum);
+            animation: pulse 2s infinite;
+        }
+        
+        .real-time-update {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            opacity: 0.7;
+        }
+        
+        .real-time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .real-time-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            padding: 6px 8px;
+            background-color: rgba(7, 7, 30, 0.4);
+            border-radius: 3px;
+        }
+        
+        .real-time-label {
+            opacity: 0.8;
+        }
+        
+        .real-time-value {
+            font-weight: bold;
+            font-family: var(--font-mono);
+        }
+        
+        /* Critical breakout zone indicator */
+        .critical-zone {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(0, 255, 157, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            animation: targetPulse 3s infinite;
+        }
+        
+        .critical-zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .critical-zone-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--neon-confirm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .critical-zone-title i {
+            color: var(--neon-confirm);
+        }
+        
+        .critical-zone-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--neon-confirm);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .critical-zone-status.in-zone {
+            animation: pulse 2s infinite;
+        }
+        
+        .critical-zone-chart {
+            height: 30px;
+            position: relative;
+            background-color: rgba(7, 7, 30, 0.5);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .zone-range {
+            position: absolute;
+            height: 100%;
+            background-color: rgba(0, 255, 157, 0.2);
+            border-left: 1px dashed rgba(0, 255, 157, 0.5);
+            border-right: 1px dashed rgba(0, 255, 157, 0.5);
+        }
+        
+        .current-value {
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        
+        .current-value::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        
+        .zone-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            font-family: var(--font-mono);
+        }
+        
+        .zone-label {
+            opacity: 0.7;
+        }
+        
+        .zone-label.highlight {
+            color: var(--neon-confirm);
+            opacity: 1;
+        }
+        
+        .critical-zone-message {
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(7, 7, 33, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--neon-quantum);
+            border-radius: 6px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--neon-quantum), var(--neon-signal));
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .modal-title {
+            font-size: 16px;
+            color: var(--neon-quantum);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--neon-quantum);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .api-key-group {
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 14px;
+            font-size: 10px;
+            margin-left: 5px;
+            cursor: help;
+            position: relative;
+            color: var(--neon-quantum);
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(7, 7, 33, 0.9);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 11px;
+            font-weight: normal;
+            letter-spacing: normal;
+            text-transform: none;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+        
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: rgba(7, 7, 30, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-mono);
+            transition: all 0.2s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-quantum);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+        
+        .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0.7;
+            z-index: 1;
+        }
+        
+        .toggle-visibility:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+        }
+        
+        .form-submit {
+            background-color: transparent;
+            border: 1px solid var(--neon-quantum);
+            color: var(--neon-quantum);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .form-submit:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .form-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-message.error {
+            background-color: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            color: var(--neon-alert);
+        }
+        
+        .form-message.success {
+            background-color: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--neon-confirm);
+        }
+        
+        /* Filter dropdown */
+        .filter-dropdown {
+            position: relative;
+        }
+        
+        .filter-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            opacity: 0.7;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-button:hover {
+            opacity: 1;
+            color: var(--neon-quantum);
+            background-color: rgba(0, 243, 255, 0.1);
+        }
+        
+        .filter-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background-color: rgba(7, 7, 33, 0.95);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+            padding: 5px;
+            z-index: 10;
+            min-width: 180px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .filter-menu.show {
+            display: block;
+            animation: fadeIn 0.2s;
+        }
+        
+        .filter-option {
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-option:hover {
+            background-color: rgba(0, 243, 255, 0.1);
+            transform: translateX(3px);
+        }
+        
+        .filter-option.active {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-quantum);
+        }
+        
+        .filter-option i {
+            width: 14px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        /* Switch toggle */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .switch-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(7, 7, 30, 0.6);
+            transition: .3s;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 2px;
+            background-color: var(--text-primary);
+            transition: .3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-quantum);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(19px);
+            background-color: var(--neon-quantum);
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        /* Notification sound */
+        .notification-sound {
+            display: none;
+        }
