@@ -1,0 +1,47 @@
+{
+    "name": "nexus-alpha",
+    "version": "1.0.0",
+    "description": "HyperQuantum Breakout Detection Engine with real-time cyberpunk UI",
+    "private": true,
+    "dependencies": {
+      "@polygon.io/client-js": "^7.0.0",
+      "axios": "^1.4.0",
+      "d3": "^7.8.5",
+      "moment": "^2.29.4",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-scripts": "5.0.1",
+      "recharts": "^2.6.2"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "deploy:github": "npm run build && gh-pages -d build",
+      "deploy:vercel": "vercel --prod"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "gh-pages": "^5.0.0",
+      "vercel": "^30.2.3"
+    },
+    "homepage": "."
+  }
