@@ -1,28 +1,17 @@
 <!DOCTYPE html>
-<!-- PHANTOM_EDGE.html - Quantum Breakout Detection System v3.7.9 -->
-<!-- Advanced Real-Time Market Analysis Framework -->
-<!-- Focused on 8-13% Critical Breakout Detection Window -->
-<!-- Core Detection Algorithm: pE-QuantumEdge™ -->
-<!-- Designed by HyperThought Industries -->
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHANTOM_EDGE // Quantum Breakout Detection System v3.7.9</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- CSS would be included here or in a separate file -->
-    <link rel="stylesheet" href="phantom-edge.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Scanlines effect -->
     <div class="scanlines"></div>
-
-    <!-- Notification sound -->
     <audio id="alertSound" class="notification-sound">
         <source src="https://cdnjs.cloudflare.com/ajax/libs/sound-effects/1.0.0/alerts/alert-3.mp3" type="audio/mpeg">
     </audio>
-
     <header>
         <div class="logo-container">
             <i class="fas fa-satellite logo-icon"></i>
@@ -52,15 +41,11 @@
             </a>
         </div>
     </header>
-
     <div class="ticker-tape">
         <div class="ticker-tape-container" id="tickerTape">
-            <!-- Dynamic ticker content will go here -->
         </div>
     </div>
-
     <main>
-        <!-- Watchlist Panel -->
         <section class="panel">
             <div class="panel-header">
                 <div>
@@ -105,12 +90,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Stock cards will be dynamically generated here -->
                 </div>
             </div>
         </section>
-
-        <!-- Detail Panel -->
         <section class="panel">
             <div class="detail-header" id="stockDetailHeader">
                 <div class="stock-title">
@@ -214,7 +196,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="critical-zone" id="criticalZone">
                             <div class="critical-zone-header">
                                 <div class="critical-zone-title">
@@ -236,7 +217,6 @@
                                 Asset is currently in optimal breakout detection zone. pE-QuantumEdge™ identifies 8-13% moves as the highest probability window for continued momentum.
                             </div>
                         </div>
-                        
                         <div class="advanced-analysis">
                             <div class="analysis-section-title">
                                 <i class="fas fa-microchip"></i> Algorithm Analysis
@@ -261,7 +241,6 @@
                                     <div class="algorithm-value">Strong</div>
                                 </div>
                             </div>
-                            
                             <div class="volume-analysis">
                                 <div class="analysis-section-title">
                                     <i class="fas fa-chart-bar"></i> Real-Time Volume Analysis
@@ -276,7 +255,6 @@
                                     <div>Current: 2.6x Average</div>
                                 </div>
                             </div>
-                            
                             <div class="signal-metrics">
                                 <div class="signal-metric">
                                     <div class="signal-label">Signal</div>
@@ -291,7 +269,6 @@
                                     <div class="signal-value">94%</div>
                                 </div>
                             </div>
-                            
                             <div class="real-time-metrics">
                                 <div class="real-time-header">
                                     <div class="real-time-title">
@@ -318,7 +295,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="timeframe-analysis">
                                 <div class="analysis-section-title">
                                     <i class="fas fa-clock"></i> Multi-Timeframe Analysis
@@ -347,7 +323,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="pattern-recognition">
                                 <div class="analysis-section-title">
                                     <i class="fas fa-signature"></i> Pattern Recognition
@@ -371,7 +346,6 @@
                                     <div class="pattern-probability">94%</div>
                                 </div>
                             </div>
-                            
                             <div class="data-quality">
                                 <div class="quality-indicator">
                                     <div class="quality-dot high"></div>
@@ -381,7 +355,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="metrics-card">
                         <div class="metrics-card-title">
                             <i class="fas fa-bolt"></i> Recent Breakout Alerts
@@ -410,7 +383,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="webull-cta">
                         <div class="webull-header">
                             <div class="webull-logo">W</div>
@@ -427,8 +399,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Settings Modal -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -475,8 +445,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Add Stock Modal -->
     <div class="modal" id="addStockModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -501,8 +469,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Alerts Modal -->
     <div class="modal" id="alertsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -510,7 +476,6 @@
                 <button class="modal-close" id="closeAlertsBtn">&times;</button>
             </div>
             <div class="alerts-card" id="allAlertsList" style="max-height: 400px;">
-                <!-- All alerts will be shown here -->
                 <div class="empty-alerts">
                     <i class="fas fa-satellite-dish"></i>
                     <div>No breakout alerts detected yet</div>
@@ -519,8 +484,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Real-time breakout alert popup -->
     <div class="alert-popup" id="alertPopup" style="display: none;">
         <div class="alert-popup-header">
             <div class="alert-popup-title">
@@ -556,9 +519,7 @@
             </div>
         </div>
     </div>
-
-    <!-- JavaScript files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
-    <script src="phantom-edge.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
