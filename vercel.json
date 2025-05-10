@@ -13,6 +13,14 @@
         "dest": "/static/$1"
       },
       {
+        "src": "/assets/(.*)",
+        "dest": "/assets/$1"
+      },
+      {
+        "src": "/manifest.json",
+        "dest": "/manifest.json"
+      },
+      {
         "src": "/favicon.ico",
         "dest": "/favicon.ico"
       },
@@ -25,12 +33,12 @@
         "dest": "/logo512.png"
       },
       {
-        "src": "/manifest.json",
-        "dest": "/manifest.json"
+        "src": "/alert.mp3",
+        "dest": "/alert.mp3"
       },
       {
-        "src": "/robots.txt",
-        "dest": "/robots.txt"
+        "src": "/critical-alert.mp3",
+        "dest": "/critical-alert.mp3"
       },
       {
         "src": "/(.*)",

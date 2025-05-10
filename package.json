@@ -1,17 +1,16 @@
 {
-    "name": "nexus-alpha",
-    "version": "1.0.0",
-    "description": "HyperQuantum Breakout Detection Engine with real-time cyberpunk UI",
+    "name": "singularity-breakout-matrix",
+    "version": "2.7.4",
+    "description": "SINGULARITY™ Quantum Breakout Detection Matrix - Real-time stock breakout detection system",
     "private": true,
     "dependencies": {
-      "@polygon.io/client-js": "^7.0.0",
-      "axios": "^1.4.0",
+      "@polygon.io/client-js": "^7.2.0",
+      "axios": "^1.6.2",
       "d3": "^7.8.5",
       "moment": "^2.29.4",
       "react": "^18.2.0",
       "react-dom": "^18.2.0",
-      "react-scripts": "5.0.1",
-      "recharts": "^2.6.2"
+      "react-scripts": "5.0.1"
     },
     "scripts": {
       "start": "react-scripts start",
@@ -40,8 +39,8 @@
       ]
     },
     "devDependencies": {
-      "gh-pages": "^5.0.0",
-      "vercel": "^30.2.3"
+      "gh-pages": "^6.0.0",
+      "vercel": "^32.5.0"
     },
     "homepage": "."
   }
