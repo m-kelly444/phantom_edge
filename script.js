@@ -1619,3 +1619,371 @@ function seededRandom(seed) {
 function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+
+
+
+
+
+
+
+// Finish the breakout chart annotation logic
+        globalState.chartInstance.options.plugins.annotation = {
+            annotations: {
+                breakoutMin: {
+                    type: 'line',
+                    yMin: minBreakoutPrice,
+                    yMax: minBreakoutPrice,
+                    borderColor: 'rgba(0,255,157,0.4)',
+                    borderWidth: 1,
+                    label: {
+                        display: true,
+                        content: '8% Breakout Start',
+                        position: 'start',
+                        color: '#00ff9d',
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                breakoutMax: {
+                    type: 'line',
+                    yMin: maxBreakoutPrice,
+                    yMax: maxBreakoutPrice,
+                    borderColor: 'rgba(0,255,157,0.4)',
+                    borderWidth: 1,
+                    label: {
+                        display: true,
+                        content: '13% Breakout End',
+                        position: 'end',
+                        color: '#00ff9d',
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            }
+        };
+    } else {
+        globalState.chartInstance.options.plugins.annotation = {};
+    }
+
+    globalState.chartInstance.update();
+}
+
+// Update breakout analysis panel
+function updateBreakoutAnalysis(data) {
+    const breakoutZone = data.inBreakoutZone;
+    const highVolume = data.highVolume;
+
+    // Show breakout analysis card
+    elements.breakoutAnalysis.style.display = 'flex';
+
+    // Update values
+    elements.priceIncreaseValue.textContent = `${data.percentChange}%`;
+    elements.volumeIncreaseValue.textContent = `${data.volumeMultiplier}x`;
+    elements.targetRangeValue.textContent = breakoutZone ? 'Yes' : 'No';
+
+    // Icons
+    updateCriteriaIcon(elements.priceIncreaseIcon, parseFloat(data.percentChange) >= config.priceMovementMin);
+    updateCriteriaIcon(elements.volumeIncreaseIcon, highVolume);
+    updateCriteriaIcon(elements.targetRangeIcon, breakoutZone);
+
+    // Status
+    if (breakoutZone && highVolume) {
+        elements.breakoutStatus.textContent = 'High Breakout Probability';
+        elements.breakoutStatus.className = 'analysis-status alert';
+        elements.zoneStatus.textContent = 'IN TARGET ZONE';
+    } else if (breakoutZone) {
+        elements.breakoutStatus.textContent = 'Moderate Probability';
+        elements.breakoutStatus.className = 'analysis-status warning';
+        elements.zoneStatus.textContent = 'IN ZONE, LOW VOLUME';
+    } else {
+        elements.breakoutStatus.textContent = 'Outside Breakout Zone';
+        elements.breakoutStatus.className = 'analysis-status normal';
+        elements.zoneStatus.textContent = 'OUTSIDE ZONE';
+    }
+}
+
+// Update criteria icons
+function updateCriteriaIcon(el, passed) {
+    el.className = 'criteria-icon ' + (passed ? 'pass' : 'fail');
+    el.innerHTML = `<i class="fas fa-${passed ? 'check' : 'times'}"></i>`;
+}
+
+// Change chart timeframe
+function changeChartTimeframe(timeframe) {
+    console.log(`Changing chart timeframe to ${timeframe}...`);
+    // Simulate change: in real app, fetch different data
+    // For now just update label
+    globalState.chartInstance.options.plugins.title = {
+        display: true,
+        text: `Timeframe: ${timeframe}`,
+        color: '#00f3ff',
+        font: { size: 12 }
+    };
+    globalState.chartInstance.update();
+}
+
+// Toggle sound
+function toggleSound() {
+    globalState.soundEnabled = !globalState.soundEnabled;
+    localStorage.setItem('soundEnabled', globalState.soundEnabled);
+    updateSoundToggle();
+}
+
+// Update sound toggle UI
+function updateSoundToggle() {
+    const icon = elements.soundToggle.querySelector('i');
+    if (globalState.soundEnabled) {
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
+        elements.soundToggle.classList.add('active');
+    } else {
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
+        elements.soundToggle.classList.remove('active');
+    }
+}
+
+// Show alert popup (future hook)
+function showAlertPopup(message) {
+    if (globalState.soundEnabled && elements.alertSound) {
+        elements.alertSound.play();
+    }
+    alert(message); // Placeholder
+}
+
+// Open modal
+function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+
+// Close modal
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+// Update system alert level
+function updateAlertLevel(level) {
+    const el = elements.alertLevelIndicator;
+    el.className = 'alert-level';
+    if (level === 'alert') {
+        el.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ALERT MODE`;
+        el.classList.add('alert');
+    } else {
+        el.innerHTML = `<i class="fas fa-shield-alt"></i> SYSTEM ARMED`;
+    }
+}
+
+// Find stock name
+function findStockName(symbol) {
+    const match = config.defaultStocks.find(s => s.symbol === symbol);
+    return match ? match.name : symbol;
+}
+
+// Filter watchlist by tag
+function filterWatchlistByTag(tag) {
+    const filtered = globalState.watchlist.filter(stock => {
+        const data = globalState.stockData[stock.symbol];
+        if (!data) return false;
+        if (tag === 'all') return true;
+        if (tag === 'breakout zone') return data.inBreakoutZone;
+        if (tag === '8-10%') return parseFloat(data.percentChange) >= 8 && parseFloat(data.percentChange) < 10;
+        if (tag === '10-13%') return parseFloat(data.percentChange) >= 10 && parseFloat(data.percentChange) <= 13;
+        if (tag === 'high volume') return data.highVolume;
+        return true;
+    });
+    
+    elements.watchlist.innerHTML = '';
+    filtered.forEach(stock => {
+        const data = globalState.stockData[stock.symbol];
+        if (data) createStockCard(stock.symbol, data);
+    });
+}
+
+// Toggle filter menu
+function toggleFilterMenu() {
+    elements.filterMenu.classList.toggle('show');
+}
+
+
+// Finish the breakout chart annotation logic
+globalState.chartInstance.options.plugins.annotation = {
+    annotations: {
+        breakoutMin: {
+            type: 'line',
+            yMin: minBreakoutPrice,
+            yMax: minBreakoutPrice,
+            borderColor: 'rgba(0,255,157,0.4)',
+            borderWidth: 1,
+            label: {
+                display: true,
+                content: '8% Breakout Start',
+                position: 'start',
+                color: '#00ff9d',
+                font: {
+                    size: 10
+                }
+            }
+        },
+        breakoutMax: {
+            type: 'line',
+            yMin: maxBreakoutPrice,
+            yMax: maxBreakoutPrice,
+            borderColor: 'rgba(0,255,157,0.4)',
+            borderWidth: 1,
+            label: {
+                display: true,
+                content: '13% Breakout End',
+                position: 'end',
+                color: '#00ff9d',
+                font: {
+                    size: 10
+                }
+            }
+        }
+    }
+};
+} else {
+globalState.chartInstance.options.plugins.annotation = {};
+}
+
+globalState.chartInstance.update();
+}
+
+// Update breakout analysis panel
+function updateBreakoutAnalysis(data) {
+const breakoutZone = data.inBreakoutZone;
+const highVolume = data.highVolume;
+
+// Show breakout analysis card
+elements.breakoutAnalysis.style.display = 'flex';
+
+// Update values
+elements.priceIncreaseValue.textContent = `${data.percentChange}%`;
+elements.volumeIncreaseValue.textContent = `${data.volumeMultiplier}x`;
+elements.targetRangeValue.textContent = breakoutZone ? 'Yes' : 'No';
+
+// Icons
+updateCriteriaIcon(elements.priceIncreaseIcon, parseFloat(data.percentChange) >= config.priceMovementMin);
+updateCriteriaIcon(elements.volumeIncreaseIcon, highVolume);
+updateCriteriaIcon(elements.targetRangeIcon, breakoutZone);
+
+// Status
+if (breakoutZone && highVolume) {
+elements.breakoutStatus.textContent = 'High Breakout Probability';
+elements.breakoutStatus.className = 'analysis-status alert';
+elements.zoneStatus.textContent = 'IN TARGET ZONE';
+} else if (breakoutZone) {
+elements.breakoutStatus.textContent = 'Moderate Probability';
+elements.breakoutStatus.className = 'analysis-status warning';
+elements.zoneStatus.textContent = 'IN ZONE, LOW VOLUME';
+} else {
+elements.breakoutStatus.textContent = 'Outside Breakout Zone';
+elements.breakoutStatus.className = 'analysis-status normal';
+elements.zoneStatus.textContent = 'OUTSIDE ZONE';
+}
+}
+
+// Update criteria icons
+function updateCriteriaIcon(el, passed) {
+el.className = 'criteria-icon ' + (passed ? 'pass' : 'fail');
+el.innerHTML = `<i class="fas fa-${passed ? 'check' : 'times'}"></i>`;
+}
+
+// Change chart timeframe
+function changeChartTimeframe(timeframe) {
+console.log(`Changing chart timeframe to ${timeframe}...`);
+// Simulate change: in real app, fetch different data
+// For now just update label
+globalState.chartInstance.options.plugins.title = {
+display: true,
+text: `Timeframe: ${timeframe}`,
+color: '#00f3ff',
+font: { size: 12 }
+};
+globalState.chartInstance.update();
+}
+
+// Toggle sound
+function toggleSound() {
+globalState.soundEnabled = !globalState.soundEnabled;
+localStorage.setItem('soundEnabled', globalState.soundEnabled);
+updateSoundToggle();
+}
+
+// Update sound toggle UI
+function updateSoundToggle() {
+const icon = elements.soundToggle.querySelector('i');
+if (globalState.soundEnabled) {
+icon.classList.remove('fa-volume-mute');
+icon.classList.add('fa-volume-up');
+elements.soundToggle.classList.add('active');
+} else {
+icon.classList.remove('fa-volume-up');
+icon.classList.add('fa-volume-mute');
+elements.soundToggle.classList.remove('active');
+}
+}
+
+// Show alert popup (future hook)
+function showAlertPopup(message) {
+if (globalState.soundEnabled && elements.alertSound) {
+elements.alertSound.play();
+}
+alert(message); // Placeholder
+}
+
+// Open modal
+function openModal(id) {
+document.getElementById(id).style.display = 'flex';
+}
+
+// Close modal
+function closeModal(id) {
+document.getElementById(id).style.display = 'none';
+}
+
+// Update system alert level
+function updateAlertLevel(level) {
+const el = elements.alertLevelIndicator;
+el.className = 'alert-level';
+if (level === 'alert') {
+el.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ALERT MODE`;
+el.classList.add('alert');
+} else {
+el.innerHTML = `<i class="fas fa-shield-alt"></i> SYSTEM ARMED`;
+}
+}
+
+// Find stock name
+function findStockName(symbol) {
+const match = config.defaultStocks.find(s => s.symbol === symbol);
+return match ? match.name : symbol;
+}
+
+// Filter watchlist by tag
+function filterWatchlistByTag(tag) {
+const filtered = globalState.watchlist.filter(stock => {
+const data = globalState.stockData[stock.symbol];
+if (!data) return false;
+if (tag === 'all') return true;
+if (tag === 'breakout zone') return data.inBreakoutZone;
+if (tag === '8-10%') return parseFloat(data.percentChange) >= 8 && parseFloat(data.percentChange) < 10;
+if (tag === '10-13%') return parseFloat(data.percentChange) >= 10 && parseFloat(data.percentChange) <= 13;
+if (tag === 'high volume') return data.highVolume;
+return true;
+});
+
+elements.watchlist.innerHTML = '';
+filtered.forEach(stock => {
+const data = globalState.stockData[stock.symbol];
+if (data) createStockCard(stock.symbol, data);
+});
+}
+
+// Toggle filter menu
+function toggleFilterMenu() {
+elements.filterMenu.classList.toggle('show');
+}
